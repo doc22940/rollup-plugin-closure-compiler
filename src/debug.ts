@@ -16,21 +16,14 @@
 
 import { writeTempFile } from './temp-file';
 
-const DEBUG_ENABLED = false;
+const DEBUG_ENABLED = true;
 
 /* c8 ignore next 15 */
-export async function logTransformChain(
-  file: string,
-  stage: string,
-  messages: Array<[string, string]>,
-): Promise<void> {
+export async function logTransformChain(file: string, stage: string, messages: Array<[string, string]>): Promise<void> {
   if (!DEBUG_ENABLED) return;
   let output: string = `\n${file} - ${stage}`;
   for (const [message, source] of messages) {
-    output += `\n${message.substr(0, 15).padEnd(18, '.')} - file://${await writeTempFile(
-      source,
-      '.js',
-    )}`;
+    output += `\n${message.substr(0, 15).padEnd(18, '.')} - file://${await writeTempFile(source, '.js')}`;
   }
   console.log(output);
 }

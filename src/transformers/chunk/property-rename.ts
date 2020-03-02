@@ -30,7 +30,6 @@ import {
 } from '../../acorn';
 import { asyncWalk as walk } from 'estree-walker';
 import { BaseNode } from 'estree';
-import { Position } from 'acorn';
 
 /*
   "minify": {
@@ -57,6 +56,7 @@ const a_CHAR_CODE = 'a'.charCodeAt(0);
 const z_CHAR_CODE = 'z'.charCodeAt(0);
 const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (i: number, count: number) => count + from);
 const VALID_RANGE = [...range(a_CHAR_CODE, z_CHAR_CODE), ...range(A_CHAR_CODE, Z_CHAR_CODE)];
+const VALID_RANGE_LENGTH_CHECK = VALID_RANGE.length - 1;
 
 /**
  * Accept and use the "mangle" configuration supplied by Microbundle or other tools
@@ -72,24 +72,23 @@ export default class RequestedPropertyRename extends ChunkTransform implements T
   private nextRenameValue = (): string => {
     let { currentCharPositions } = this.memory.rename;
     if (this.stored === 0) {
-      return String.fromCharCode(VALID_RANGE[0]);
+      return '_' + String.fromCharCode(VALID_RANGE[0]);
     }
 
-    let iterator = 0;
+    let iterator = currentCharPositions.length;
     let iterated = false;
     do {
-      if (currentCharPositions[iterator] < VALID_RANGE.length) {
-        currentCharPositions[iterator]++;
+      if (currentCharPositions[iterator] < VALID_RANGE_LENGTH_CHECK) {
+        this.memory.rename.currentCharPositions[iterator]++;
         iterated = true;
-        break;
       }
-      iterator++;
-    } while (iterator <= currentCharPositions.length);
+      iterator--;
+    } while (!iterated && iterator >= 0);
     if (!iterated) {
       this.memory.rename.currentCharPositions = [...currentCharPositions.map(position => 0), 0];
     }
 
-    return String.fromCharCode(...currentCharPositions.map(position => VALID_RANGE[position]));
+    return '_' + String.fromCharCode(...this.memory.rename.currentCharPositions.map(position => VALID_RANGE[position]));
   };
 
   /**
@@ -110,7 +109,7 @@ export default class RequestedPropertyRename extends ChunkTransform implements T
   private store = (node: BaseNode): void => {
     const { candidates, mapping } = this.memory.rename;
     if (isIdentifier(node) && candidates.has(node.name) && !mapping.has(node.name)) {
-      mapping.set(node.name, `_${this.nextRenameValue()}`);
+      mapping.set(node.name, this.nextRenameValue());
       this.stored++;
     }
   };
