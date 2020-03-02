@@ -29,4 +29,17 @@
 
 export class Ebbinghaus {
   public hashbang: string | null = null;
+  public rename: {
+    enabled: boolean;
+    currentCharPositions: Array<number>;
+    candidates: Set<string>;
+    mapping: Map<string, string>;
+    unavailable: Set<string>;
+  } = {
+    enabled: false,
+    currentCharPositions: [0],
+    candidates: new Set(),
+    mapping: new Map(),
+    unavailable: new Set(),
+  };
 }

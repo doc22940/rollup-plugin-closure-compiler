@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  OutputOptions,
-  PluginContext,
-  InputOptions,
-  RenderedChunk,
-  TransformSourceDescription,
-} from 'rollup';
+import { OutputOptions, PluginContext, InputOptions, RenderedChunk, TransformSourceDescription } from 'rollup';
 import HashbangRemoveTransform from './hashbang-remove';
 import HashbangApplyTransform from './hashbang-apply';
 import IifeTransform from './iife';
@@ -31,6 +25,7 @@ import ImportTransform from './imports';
 import StrictTransform from './strict';
 import ConstTransform from './const';
 import ASITransform from './asi';
+import RequestedPropertyRename from './property-rename';
 import { ChunkTransform, chunkLifecycle } from '../../transform';
 import { Mangle } from '../mangle';
 import { Ebbinghaus } from '../ebbinghaus';
@@ -48,6 +43,7 @@ const TRANSFORMS: Array<typeof ChunkTransform> = [
   ExportTransform,
   ImportTransform,
   ASITransform,
+  RequestedPropertyRename,
   // Acorn cannot parse content starting here.
   HashbangApplyTransform,
 ];
@@ -71,10 +67,7 @@ export function create(
   outputOptions: OutputOptions,
 ): Array<ChunkTransform> {
   const pluginOptions = pluckPluginOptions(requestedCompileOptions);
-  return TRANSFORMS.map(
-    transform =>
-      new transform(context, pluginOptions, mangler, memory, inputOptions, outputOptions),
-  );
+  return TRANSFORMS.map(transform => new transform(context, pluginOptions, mangler, memory, inputOptions, outputOptions));
 }
 
 /**

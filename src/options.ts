@@ -25,15 +25,14 @@ export const ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_UNSPECIFIED =
   'Providing the warning_level=VERBOSE compile option also requires a valid language_out compile option.';
 export const ERROR_WARNINGS_ENABLED_LANGUAGE_OUT_INVALID =
   'Providing the warning_level=VERBOSE and language_out=NO_TRANSPILE compile options will remove warnings.';
-const OPTIONS_TO_REMOVE_FOR_CLOSURE = ['remove_strict_directive'];
+const OPTIONS_TO_REMOVE_FOR_CLOSURE = ['remove_strict_directive', 'property_rename'];
 
 /**
  * Checks if output format is ESM
  * @param outputOptions
  * @return boolean
  */
-export const isESMFormat = ({ format }: OutputOptions): boolean =>
-  format === 'esm' || format === 'es';
+export const isESMFormat = ({ format }: OutputOptions): boolean => format === 'esm' || format === 'es';
 
 /**
  * Throw Errors if compile options will result in unexpected behaviour.

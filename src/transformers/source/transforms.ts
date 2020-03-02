@@ -19,9 +19,11 @@ import { Mangle } from '../mangle';
 import { PluginContext, InputOptions, OutputOptions, TransformSourceDescription } from 'rollup';
 import { CompileOptions } from 'google-closure-compiler';
 import HashbangTransform from './hashbang';
+import PropertyRenameTransform from './property-rename';
 import { Ebbinghaus } from '../ebbinghaus';
+import { pluckPluginOptions } from '../../options';
 
-const TRANSFORMS: Array<typeof SourceTransform> = [HashbangTransform];
+const TRANSFORMS: Array<typeof SourceTransform> = [HashbangTransform, PropertyRenameTransform];
 // Temporarily disabling many SourceTransforms, aligning for future release.
 // ImportTransform, ExportTransform
 
@@ -42,10 +44,10 @@ export const create = (
   memory: Ebbinghaus,
   inputOptions: InputOptions,
   outputOptions: OutputOptions,
-): Array<SourceTransform> =>
-  TRANSFORMS.map(
-    transform => new transform(context, {}, mangler, memory, inputOptions, outputOptions),
-  );
+): Array<SourceTransform> => {
+  const pluginOptions = pluckPluginOptions(requestedCompileOptions);
+  return TRANSFORMS.map(transform => new transform(context, pluginOptions, mangler, memory, inputOptions, outputOptions));
+};
 
 /**
  * Run each transform's `transform` lifecycle.
@@ -53,10 +55,6 @@ export const create = (
  * @param transforms
  * @return source code following `transform`
  */
-export async function transform(
-  source: string,
-  id: string,
-  transforms: Array<SourceTransform>,
-): Promise<TransformSourceDescription> {
+export async function transform(source: string, id: string, transforms: Array<SourceTransform>): Promise<TransformSourceDescription> {
   return await sourceLifecycle(id, 'Transform', source, transforms);
 }

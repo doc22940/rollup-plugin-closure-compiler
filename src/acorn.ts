@@ -28,6 +28,8 @@ import {
   VariableDeclaration,
   ClassDeclaration,
   ExportSpecifier,
+  ObjectExpression,
+  AssignmentExpression,
 } from 'estree';
 // import { DYNAMIC_IMPORT_DECLARATION } from './types';
 import * as acorn from 'acorn';
@@ -67,6 +69,12 @@ export function isIdentifier(node: BaseNode): node is Identifier {
 }
 export function isImportDeclaration(node: BaseNode): node is ImportDeclaration {
   return node.type === 'ImportDeclaration';
+}
+export function isObjectExpression(node: BaseNode): node is ObjectExpression {
+  return node.type === 'ObjectExpression';
+}
+export function isAssignmentExpression(node: BaseNode): node is AssignmentExpression {
+  return node.type === 'AssignmentExpression';
 }
 export function isImportExpression(node: BaseNode): boolean {
   // @types/estree does not yet support 2020 addons to ECMA.

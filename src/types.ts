@@ -27,11 +27,7 @@ export const EXPORT_NAMED_DECLARATION = 'ExportNamedDeclaration';
 export const EXPORT_SPECIFIER = 'ExportSpecifier';
 export const EXPORT_DEFAULT_DECLARATION = 'ExportDefaultDeclaration';
 export const EXPORT_ALL_DECLARATION = 'ExportAllDeclaration';
-export const ALL_EXPORT_DECLARATIONS = [
-  EXPORT_NAMED_DECLARATION,
-  EXPORT_DEFAULT_DECLARATION,
-  EXPORT_ALL_DECLARATION,
-];
+export const ALL_EXPORT_DECLARATIONS = [EXPORT_NAMED_DECLARATION, EXPORT_DEFAULT_DECLARATION, EXPORT_ALL_DECLARATION];
 
 export type Range = [number, number];
 
@@ -65,4 +61,29 @@ export interface TransformInterface {
 
 export interface PluginOptions {
   [key: string]: string | boolean;
+}
+
+export interface MangleProperties {
+  mangle: {
+    regex: RegExp;
+    reserved: Array<string>;
+  } | null;
+  props: {
+    [key: string]: string;
+  };
+}
+export interface ManglePropertiesConfiguration {
+  minify?: {
+    mangle?: {
+      properties?: {
+        regex?: string;
+        reserved?: Array<string>;
+      };
+    };
+  };
+  props?: {
+    props?: {
+      [key: string]: string;
+    };
+  };
 }
