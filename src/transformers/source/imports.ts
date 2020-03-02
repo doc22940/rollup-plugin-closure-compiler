@@ -17,7 +17,7 @@
 import { SourceTransform } from '../../transform';
 import MagicString from 'magic-string';
 import { parse, isImportDeclaration } from '../../acorn';
-import { asyncWalk as walk } from '@kristoferbaxter/estree-walker';
+import { asyncWalk as walk } from 'estree-walker';
 import { literalName } from '../../parsing/literal-name';
 import { Specifiers } from '../../parsing/import-specifiers';
 import { ImportDeclaration } from 'estree';
@@ -48,7 +48,7 @@ export class ImportTransform extends SourceTransform {
   };
 
   public async transform(id: string, source: MagicString): Promise<MagicString> {
-    const program = parse(source.toString());
+    const program = await parse(id, source.toString());
     const { mangle } = this;
 
     // This is a two-part walk

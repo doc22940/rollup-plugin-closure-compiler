@@ -1,6 +1,6 @@
 {
   "name": "@ampproject/rollup-plugin-closure-compiler",
-  "version": "0.21.0",
+  "version": "0.23.0",
   "description": "Rollup + Google Closure Compiler",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.mjs",
@@ -35,31 +35,31 @@
   },
   "dependencies": {
     "@ampproject/remapping": "0.2.0",
-    "@kristoferbaxter/estree-walker": "2.0.0",
-    "acorn": "7.1.0",
+    "acorn": "7.1.1",
     "acorn-walk": "7.1.1",
-    "google-closure-compiler": "20200204.0.0",
+    "estree-walker": "2.0.1",
+    "google-closure-compiler": "20200224.0.0",
     "magic-string": "0.25.6",
-    "uuid": "3.4.0"
+    "uuid": "7.0.1"
   },
   "devDependencies": {
     "@types/acorn": "4.0.5",
     "@types/estree": "0.0.42",
-    "@types/node": "12.12.27",
-    "@types/uuid": "3.4.7",
+    "@types/node": "12.12.29",
+    "@types/uuid": "7.0.0",
     "ava": "2.4.0",
-    "builtins": "3.0.0",
+    "builtins": "3.0.1",
     "c8": "7.1.0",
     "codecov": "3.6.5",
     "husky": "4.2.3",
-    "lint-staged": "10.0.7",
-    "np": "6.1.0",
+    "lint-staged": "10.0.8",
+    "np": "6.2.0",
     "npm-run-all": "4.1.5",
     "prettier": "1.19.1",
     "rimraf": "3.0.2",
-    "rollup": "1.31.1",
+    "rollup": "1.32.0",
     "sirv-cli": "0.4.5",
-    "typescript": "3.7.5"
+    "typescript": "3.8.3"
   },
   "lint-staged": {
     "*.ts": [
@@ -81,8 +81,14 @@
     ],
     "verbose": true
   },
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "all",
+    "parser": "typescript",
+    "singleQuote": true
+  },
   "volta": {
-    "node": "12.16.0",
+    "node": "12.16.1",
     "yarn": "1.22.0"
   },
   "prettier": {
