@@ -17,7 +17,7 @@
 import { SourceTransform } from '../../transform';
 import { TransformInterface, ManglePropertiesConfiguration, PluginOptions, MangleProperties } from '../../types';
 import MagicString from 'magic-string';
-import { asyncWalk as walk } from '@kristoferbaxter/estree-walker';
+import { asyncWalk as walk } from 'estree-walker';
 import { isIdentifier, parse } from '../../acorn';
 import { promises as fsPromises } from 'fs';
 import { resolve } from 'path';
@@ -75,7 +75,7 @@ export default class PropertyRenameTransform extends SourceTransform implements 
     if (renaming.mangle !== null && renaming.mangle.regex) {
       const { regex } = renaming.mangle;
       const { memory } = this;
-      const program = parse(source.toString());
+      const program = await parse(id, source.toString());
       let foundCandidate: boolean = false;
 
       await walk(program, {

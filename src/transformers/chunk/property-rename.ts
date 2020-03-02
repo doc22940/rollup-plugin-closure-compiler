@@ -28,8 +28,9 @@ import {
   isExportNamedDeclaration,
   isExportSpecifier,
 } from '../../acorn';
-import { asyncWalk as walk } from '@kristoferbaxter/estree-walker';
+import { asyncWalk as walk } from 'estree-walker';
 import { BaseNode } from 'estree';
+import { Position } from 'acorn';
 
 /*
   "minify": {
@@ -69,10 +70,26 @@ export default class RequestedPropertyRename extends ChunkTransform implements T
    * Find the next shortname to rename a value to.
    */
   private nextRenameValue = (): string => {
-    let { currentCharCode } = this.memory.rename;
-    // if (currentCharCode > )
-    this.memory.rename.currentCharCode++;
-    return String.fromCharCode(this.memory.rename.currentCharCode);
+    let { currentCharPositions } = this.memory.rename;
+    if (this.stored === 0) {
+      return String.fromCharCode(VALID_RANGE[0]);
+    }
+
+    let iterator = 0;
+    let iterated = false;
+    do {
+      if (currentCharPositions[iterator] < VALID_RANGE.length) {
+        currentCharPositions[iterator]++;
+        iterated = true;
+        break;
+      }
+      iterator++;
+    } while (iterator <= currentCharPositions.length);
+    if (!iterated) {
+      this.memory.rename.currentCharPositions = [...currentCharPositions.map(position => 0), 0];
+    }
+
+    return String.fromCharCode(...currentCharPositions.map(position => VALID_RANGE[position]));
   };
 
   /**
@@ -116,12 +133,12 @@ export default class RequestedPropertyRename extends ChunkTransform implements T
    * @param source source to parse, and modify
    * @return modified input source with computed literal keys
    */
-  public async post(source: MagicString): Promise<MagicString> {
+  public async post(fileName: string, source: MagicString): Promise<MagicString> {
     if (!this.memory.rename.enabled) {
       return source;
     }
 
-    const program = parse(source.toString());
+    const program = await parse(fileName, source.toString());
     const { store, storeUnavailable } = this;
 
     await walk(program, {

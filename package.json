@@ -81,12 +81,6 @@
     ],
     "verbose": true
   },
-  "prettier": {
-    "printWidth": 120,
-    "trailingComma": "all",
-    "parser": "typescript",
-    "singleQuote": true
-  },
   "volta": {
     "node": "12.16.1",
     "yarn": "1.22.0"
